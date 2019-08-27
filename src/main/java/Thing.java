@@ -5,18 +5,24 @@ public class Thing {
         this.probability = probability;
     }
 
-    public double getHappenProbability(int totalTimes, int happenTimes) {
-        if (happenTimes > totalTimes) {
-            return 0;
-        }
-        double combinations = getFactorial(totalTimes) / (getFactorial(totalTimes - happenTimes));
-        return combinations * Math.pow(probability, happenTimes) * Math.pow(1 - probability, totalTimes - happenTimes);
+    public double getProbability() {
+        return probability;
     }
 
-    private int getFactorial(int num) {
-        if (num == 1 || num == 0) {
-            return 1;
-        }
-        return num * getFactorial(num - 1);
+    public Thing and(Thing other) {
+        double newProbability = this.probability * other.probability;
+        return new Thing(newProbability);
+    }
+
+    public Thing not() {
+        return new Thing(1 - probability);
+    }
+
+    public Thing or(Thing other){
+        return (this.not().and(other.not())).not();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new Thing(0.2).not().and(new Thing(0.6)).getProbability());
     }
 }
